@@ -1,67 +1,88 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage("Build"){
-            steps{
+    stages {
+        stage("Build") {
+            steps {
                 echo "Building ..."
-                echo "mvn clean package"
+                sh 'mvn clean package' // Assuming you want to run this command
             }
         }
-        stage("Unit and Integration Test"){
-            steps{
+        stage("Unit and Integration Test") {
+            steps {
                 echo "Testing ..."
-                echo "JUnit and TestNG Testing ..."
+                sh 'mvn test' // Assuming JUnit and TestNG are run through Maven
             }
-            post{
-                always{
+            post {
+                success {
                     mail to: "Gurparsaad2003@gmail.com",
-                    subject: "Unit and Integration Test Status Email",
-                    body: "Unit and Integration Test log attached!"
+                    subject: "Unit and Integration Test Success",
+                    body: "Unit and Integration Test passed. Logs attached.",
+                    attachLog: true
+                }
+                failure {
+                    mail to: "Gurparsaad2003@gmail.com",
+                    subject: "Unit and Integration Test Failure",
+                    body: "Unit and Integration Test failed. Logs attached.",
+                    attachLog: false
                 }
             }
         }
-        stage("Code Analysis"){
-            steps{
+        stage("Code Analysis") {
+            steps {
                 echo "Analysing ..."
-                echo "sonarqube code analysis"
+                sh 'sonarqube-scanner' // Replace with your SonarQube command
             }
         }
-        stage("Security Scan"){
-            steps{
+        stage("Security Scan") {
+            steps {
                 echo "Scanning ..."
-                echo "owasp dependency-check"
+                sh 'dependency-check' // Replace with your OWASP command
             }
-            post{
-                always{
+            post {
+                success {
                     mail to: "Gurparsaad2003@gmail.com",
-                    subject: "Security Scan Status Email",
-                    body: "Security Scan log attached!"
+                    subject: "Security Scan Success",
+                    body: "Security Scan passed. Logs attached.",
+                    attachLog: true
+                }
+                failure {
+                    mail to: "Gurparsaad2003@gmail.com",
+                    subject: "Security Scan Failure",
+                    body: "Security Scan failed. Logs attached.",
+                    attachLog: false
                 }
             }
         }
-        stage("Deploy and Staging"){
-            steps{
+        stage("Deploy and Staging") {
+            steps {
                 echo "Deploying ..."
-                echo "aws deploy create-deployment"
+                sh 'aws deploy create-deployment' // Replace with your AWS deployment command
             }
         }
-        stage("Integration Tests on Staging"){
-            steps{
+        stage("Integration Tests on Staging") {
+            steps {
                 echo "Testing on Staging ..."
-                echo "Selenium Testing ..."
+                sh 'selenium-test-command' // Replace with your Selenium command
             }
-            post{
-                always{
+            post {
+                success {
                     mail to: "Gurparsaad2003@gmail.com",
-                    subject: "Integration Tests on Staging Status Email",
-                    body: "Integration Tests on Staging log attached!"
+                    subject: "Integration Tests on Staging Success",
+                    body: "Integration Tests on Staging passed. Logs attached.",
+                    attachLog: true
+                }
+                failure {
+                    mail to: "Gurparsaad2003@gmail.com",
+                    subject: "Integration Tests on Staging Failure",
+                    body: "Integration Tests on Staging failed. Logs attached.",
+                    attachLog: false
                 }
             }
         }
-        stage("Deploy to Production"){
-            steps{
+        stage("Deploy to Production") {
+            steps {
                 echo "Deploying to production ..."
-                echo "aws deploy create-deployment"
+                sh 'aws deploy create-deployment' // Replace with your AWS deployment command
             }
         }
     }
