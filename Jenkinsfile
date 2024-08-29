@@ -4,13 +4,13 @@ pipeline {
         stage("Build") {
             steps {
                 echo "Building ..."
-                sh 'mvn clean package' // Assuming you want to run this command
+                sh 'mvn clean package' 
             }
         }
         stage("Unit and Integration Test") {
             steps {
                 echo "Testing ..."
-                sh 'mvn test' // Assuming JUnit and TestNG are run through Maven
+                sh 'mvn test' 
             }
             post {
                 success {
@@ -23,20 +23,20 @@ pipeline {
                     mail to: "Gurparsaad2003@gmail.com",
                     subject: "Unit and Integration Test Failure",
                     body: "Unit and Integration Test failed. Logs attached.",
-                    attachLog: false
+                    attachLog: true
                 }
             }
         }
         stage("Code Analysis") {
             steps {
                 echo "Analysing ..."
-                sh 'sonarqube-scanner' // Replace with your SonarQube command
+                sh 'sonarqube-scanner' 
             }
         }
         stage("Security Scan") {
             steps {
                 echo "Scanning ..."
-                sh 'dependency-check' // Replace with your OWASP command
+                sh 'dependency-check' 
             }
             post {
                 success {
@@ -49,20 +49,20 @@ pipeline {
                     mail to: "Gurparsaad2003@gmail.com",
                     subject: "Security Scan Failure",
                     body: "Security Scan failed. Logs attached.",
-                    attachLog: false
+                    attachLog: true
                 }
             }
         }
         stage("Deploy and Staging") {
             steps {
                 echo "Deploying ..."
-                sh 'aws deploy create-deployment' // Replace with your AWS deployment command
+                sh 'aws deploy create-deployment'
             }
         }
         stage("Integration Tests on Staging") {
             steps {
                 echo "Testing on Staging ..."
-                sh 'selenium-test-command' // Replace with your Selenium command
+                sh 'selenium-test-command'
             }
             post {
                 success {
@@ -75,14 +75,14 @@ pipeline {
                     mail to: "Gurparsaad2003@gmail.com",
                     subject: "Integration Tests on Staging Failure",
                     body: "Integration Tests on Staging failed. Logs attached.",
-                    attachLog: false
+                    attachLog: true
                 }
             }
         }
         stage("Deploy to Production") {
             steps {
                 echo "Deploying to production ..."
-                sh 'aws deploy create-deployment' // Replace with your AWS deployment command
+                sh 'aws deploy create-deployment' 
             }
         }
     }
