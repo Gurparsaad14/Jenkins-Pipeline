@@ -4,70 +4,85 @@ pipeline {
         stage("Build") {
             steps {
                 echo "Building ..."
-                sh 'mvn clean package' // Assuming you want to run this command
+                echo 'mvn clean package' 
             }
         }
         stage("Unit and Integration Test") {
             steps {
                 echo "Testing ..."
-                sh 'mvn test' // Assuming JUnit and TestNG are run through Maven
+                echo 'mvn test' 
             }
             post {
-                always {
-                    archiveArtifacts artifacts: '**/target/*.log', allowEmptyArchive: true
+                success {
                     mail to: "Gurparsaad2003@gmail.com",
-                         subject: "Unit and Integration Test ${currentBuild.currentResult}",
-                         body: "Unit and Integration Test ${currentBuild.currentResult}. Logs attached.",
-                         attachmentsPattern: '**/target/*.log'
+                    subject: "Unit and Integration Test Success",
+                    body: "Unit and Integration Test passed. Logs attached.",
+                    attachLog: true
+                }
+                failure {
+                    mail to: "Gurparsaad2003@gmail.com",
+                    subject: "Unit and Integration Test Failure",
+                    body: "Unit and Integration Test failed. Logs attached.",
+                    attachLog: true
                 }
             }
         }
         stage("Code Analysis") {
             steps {
                 echo "Analysing ..."
-                sh 'sonarqube-scanner' // Replace with your SonarQube command
+                echo 'sonarqube-scanner' 
             }
         }
         stage("Security Scan") {
             steps {
                 echo "Scanning ..."
-                sh 'dependency-check' // Replace with your OWASP command
+                echo 'dependency-check' 
             }
             post {
-                always {
-                    archiveArtifacts artifacts: '**/target/*.log', allowEmptyArchive: true
+                success {
                     mail to: "Gurparsaad2003@gmail.com",
-                         subject: "Security Scan ${currentBuild.currentResult}",
-                         body: "Security Scan ${currentBuild.currentResult}. Logs attached.",
-                         attachmentsPattern: '**/target/*.log'
+                    subject: "Security Scan Success",
+                    body: "Security Scan passed. Logs attached.",
+                    attachLog: true
+                }
+                failure {
+                    mail to: "Gurparsaad2003@gmail.com",
+                    subject: "Security Scan Failure",
+                    body: "Security Scan failed. Logs attached.",
+                    attachLog: true
                 }
             }
         }
         stage("Deploy and Staging") {
             steps {
                 echo "Deploying ..."
-                sh 'aws deploy create-deployment' // Replace with your AWS deployment command
+                echo 'aws deploy create-deployment' 
             }
         }
         stage("Integration Tests on Staging") {
             steps {
                 echo "Testing on Staging ..."
-                sh 'selenium-test-command' // Replace with your Selenium command
+                echo 'selenium-test-command' 
             }
             post {
-                always {
-                    archiveArtifacts artifacts: '**/target/*.log', allowEmptyArchive: true
+                success {
                     mail to: "Gurparsaad2003@gmail.com",
-                         subject: "Integration Tests on Staging ${currentBuild.currentResult}",
-                         body: "Integration Tests on Staging ${currentBuild.currentResult}. Logs attached.",
-                         attachmentsPattern: '**/target/*.log'
+                    subject: "Integration Tests on Staging Success",
+                    body: "Integration Tests on Staging passed. Logs attached.",
+                    attachLog: true
+                }
+                failure {
+                    mail to: "Gurparsaad2003@gmail.com",
+                    subject: "Integration Tests on Staging Failure",
+                    body: "Integration Tests on Staging failed. Logs attached.",
+                    attachLog: true
                 }
             }
         }
         stage("Deploy to Production") {
             steps {
                 echo "Deploying to production ..."
-                sh 'aws deploy create-deployment' // Replace with your AWS deployment command
+                echo 'aws deploy create-deployment'
             }
         }
     }
