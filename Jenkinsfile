@@ -13,11 +13,8 @@ pipeline {
                 echo 'mvn test' 
             }
             post {
-                success {
+                always {
                     emailext attachLog: true, body: "Unit and Integration Test Success. Logs attached.", subject: "Unit and Integration Test Success", to: "Gurparsaad2003@gmail.com"
-                }
-                failure {
-                    emailext attachLog: true, body: "Unit and Integration Test failed. Logs attached.", subject: "Unit and Integration Test Failure", to: "Gurparsaad2003@gmail.com"
                 }
             }
         }
