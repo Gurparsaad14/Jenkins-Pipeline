@@ -57,7 +57,7 @@ pipeline {
                     emailext body: "Integration Tests on Staging passed. Logs attached.", subject: "Integration Tests on Staging Success", to: "Gurparsaad2003@gmail.com"
                 }
                 failure {
-                    emailext true, body: "Integration Tests on Staging failed. Logs attached.", subject: "Integration Tests on Staging Failed", to: "Gurparsaad2003@gmail.com"
+                    emailext body: "Integration Tests on Staging failed. Logs attached.", subject: "Integration Tests on Staging Failed", to: "Gurparsaad2003@gmail.com"
                 }
             }
         }
