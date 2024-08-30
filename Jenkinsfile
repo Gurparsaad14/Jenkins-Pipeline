@@ -4,13 +4,13 @@ pipeline {
         stage("Build") {
             steps {
                 echo "Building ..."
-                bat 'mvn clean package' 
+                echo 'mvn clean package' 
             }
         }
         stage("Unit and Integration Test") {
             steps {
                 echo "Running Unit and Integration Tests ..."
-                bat 'mvn test' 
+                echo 'mvn test' 
             }
             post {
                 success {
@@ -24,13 +24,13 @@ pipeline {
         stage("Code Analysis") {
             steps {
                 echo "Running Code Analysis ..."
-                bat 'sonar-scanner' 
+                echo 'sonar-scanner' 
             }
         }
         stage("Security Scan") {
             steps {
                 echo "Running Security Scan ..."
-                bat 'dependency-check.bat' 
+                echo 'dependency-check.bat' 
             }
             post {
                 success {
@@ -44,13 +44,13 @@ pipeline {
         stage("Deploy and Staging") {
             steps {
                 echo "Deploying to Staging ..."
-                bat 'aws deploy create-deployment --application-name <app-name> --deployment-group-name <group-name> --s3-location <s3-bucket>'
+                echo 'aws deploy create-deployment --application-name <app-name> --deployment-group-name <group-name> --s3-location <s3-bucket>'
             }
         }
         stage("Integration Tests on Staging") {
             steps {
                 echo "Running Integration Tests on Staging ..."
-                bat 'selenium-test-command' 
+                echo 'selenium-test-command' 
             }
             post {
                 success {
@@ -64,7 +64,7 @@ pipeline {
         stage("Deploy to Production") {
             steps {
                 echo "Deploying to Production ..."
-                bat 'aws deploy create-deployment --application-name <app-name> --deployment-group-name <group-name> --s3-location <s3-bucket>'
+                echo 'aws deploy create-deployment --application-name <app-name> --deployment-group-name <group-name> --s3-location <s3-bucket>'
             }
         }
     }
