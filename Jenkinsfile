@@ -1,67 +1,63 @@
-pipeline {
-    agent any
-    stages {
-        stage("Build") {
-            steps {
-                echo "Building ..."
-                echo 'mvn clean package' 
+        stage("Unit and Integration Test"){
+            steps{
+                echo "Testing ..."
+                echo "mvn test"
+                echo "JUnit and TestNG Testing ..."
             }
-        }
-        stage("Unit and Integration Test") {
-            steps {
-                echo "Running Unit and Integration Tests ..."
-                echo 'mvn test' 
-            }
-            post {
-                always {
-                    emailext attachLog: true, body: "Unit and Integration Test Success. Logs attached.", subject: "Unit and Integration Test Success", to: "Gurparsaad2003@gmail.com"
+            post{
+                always{
+                    mail to: "Gurparsaad2003@gmail.com",
+                    subject: "Unit and Integration Test Status Email",
+                    body: "Unit and Integration Test log attached!"
                 }
             }
         }
-        stage("Code Analysis") {
-            steps {
-                echo "Running Code Analysis ..."
-                echo 'sonar-scanner' 
+        stage("Code Analysis"){
+            steps{
+                echo "Analysing ..."
+                echo "mvn sonar:sonar"
+                echo "sonarqube code analysis"
             }
         }
-        stage("Security Scan") {
-            steps {
-                echo "Running Security Scan ..."
-                echo 'dependency-check.bat' 
+        stage("Security Scan"){
+            steps{
+                echo "Scanning ..."
+                echo "mvn org.owasp:dependency-check-maven:check"
+                echo "owasp dependency-check"
             }
-            post {
-                success {
-                    emailext attachLog: true, body: "Security Scan passed. Logs attached.", subject: "Security Scan Success", to: "Gurparsaad2003@gmail.com"
-                }
-                failure {
-                    emailext attachLog: true, body: "Security Scan failed. Logs attached.", subject: "Security Scan Failure", to: "Gurparsaad2003@gmail.com"
-                }
-            }
-        }
-        stage("Deploy and Staging") {
-            steps {
-                echo "Deploying to Staging ..."
-                echo 'aws deploy create-deployment --application-name <app-name> --deployment-group-name <group-name> --s3-location <s3-bucket>'
-            }
-        }
-        stage("Integration Tests on Staging") {
-            steps {
-                echo "Running Integration Tests on Staging ..."
-                echo 'selenium-test-command' 
-            }
-            post {
-                success {
-                    emailext attachLog: true, body: "Integration Tests on Staging passed. Logs attached.", subject: "Integration Tests on Staging Success", to: "Gurparsaad2003@gmail.com"
-                }
-                failure {
-                    emailext attachLog: true, body: "Integration Tests on Staging failed. Logs attached.", subject: "Integration Tests on Staging Failure", to: "Gurparsaad2003@gmail.com"
+            post{
+                always{
+                    mail to: "Gurparsaad2003@gmail.com",
+                    subject: "Security Scan Status Email",
+                    body: "Security Scan log attached!"
                 }
             }
         }
-        stage("Deploy to Production") {
-            steps {
-                echo "Deploying to Production ..."
-                echo 'aws deploy create-deployment --application-name <app-name> --deployment-group-name <group-name> --s3-location <s3-bucket>'
+        stage("Deploy and Staging"){
+            steps{
+                echo "Deploying ..."
+                echo "aws deploy create-deployment"
+            }
+        }
+        stage("Integration Tests on Staging"){
+            steps{
+                echo "Testing on Staging ..."
+                echo "mvn verify"
+                echo "Selenium Testing ..."
+            }
+            post{
+                always{
+                    mail to: "Gurparsaad2003@gmail.com",
+                    subject: "Integration Tests on Staging Status Email",
+                    body: "Integratinon Tests on Staging log attached!"
+                    body: "Integration Tests on Staging log attached!"
+                }
+            }
+        }
+        stage("Deploy to Production"){
+            steps{
+                echo "Deploying to production ..."
+                echo "aws deploy create-deployment"
             }
         }
     }
