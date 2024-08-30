@@ -12,15 +12,16 @@ pipeline {
                 echo "Testing ..."
                 echo 'mvn test' 
             }
-            post {
-                success {
-                    emailext body: 'Unit and Integration Test Success. Logs attached.', subject: 'Unit and Integration Test Success', to: 'Gurparsaad2003@gmail.com'
-                }
-                failure {
-                    emailext body: 'Unit and Integration Test Failure. Logs attached.', subject: 'Unit and Integration Test Failure', to: 'Gurparsaad2003@gmail.com'
-                }
+        }
+        post {
+            success {
+                emailext body: 'Unit and Integration Test Success. Logs attached.', subject: 'Unit and Integration Test Success', to: 'Gurparsaad2003@gmail.com'
+            }
+            failure {
+                emailext body: 'Unit and Integration Test Failure. Logs attached.', subject: 'Unit and Integration Test Failure', to: 'Gurparsaad2003@gmail.com'
             }
         }
+    
         stage("Code Analysis") {
             steps {
                 echo "Analysing ..."
