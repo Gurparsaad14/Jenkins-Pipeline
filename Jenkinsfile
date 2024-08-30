@@ -14,10 +14,10 @@ pipeline {
             }
             post {
                 success {
-                    emailext attachLog: true, body: 'Unit and Integration Test Success. Logs attached.', subject: 'Unit and Integration Test Success', to: 'Gurparsaad2003@gmail.com'
+                    emailext body: 'Unit and Integration Test Success. Logs attached.', subject: 'Unit and Integration Test Success', to: 'Gurparsaad2003@gmail.com'
                 }
                 failure {
-                    emailext attachLog: true, body: 'Unit and Integration Test Failure. Logs attached.', subject: 'Unit and Integration Test Failure', to: 'Gurparsaad2003@gmail.com'
+                    emailext body: 'Unit and Integration Test Failure. Logs attached.', subject: 'Unit and Integration Test Failure', to: 'Gurparsaad2003@gmail.com'
                 }
             }
         }
@@ -34,10 +34,10 @@ pipeline {
             }
             post {
                 success {
-                    emailext attachLog: true, body: "Security Scan passed. Logs attached.", subject: "Security Scan Success", to: "Gurparsaad2003@gmail.com"
+                    emailext body: "Security Scan passed. Logs attached.", subject: "Security Scan Success", to: "Gurparsaad2003@gmail.com"
                 }
                 failure {
-                    emailext attachLog: true, body: "Security Scan failed. Logs attached.", subject: "Security Scan Failure", to: "Gurparsaad2003@gmail.com"
+                    emailext body: "Security Scan failed. Logs attached.", subject: "Security Scan Failure", to: "Gurparsaad2003@gmail.com"
                 }
             }
         }
@@ -54,10 +54,10 @@ pipeline {
             }
             post {
                 success {
-                    emailext attachLog: true, body: "Integration Tests on Staging passed. Logs attached.", subject: "Integration Tests on Staging Success", to: "Gurparsaad2003@gmail.com"
+                    emailext body: "Integration Tests on Staging passed. Logs attached.", subject: "Integration Tests on Staging Success", to: "Gurparsaad2003@gmail.com"
                 }
                 failure {
-                    emailext attachLog: true, body: "Integration Tests on Staging failed. Logs attached.", subject: "Integration Tests on Staging Failed", to: "Gurparsaad2003@gmail.com"
+                    emailext true, body: "Integration Tests on Staging failed. Logs attached.", subject: "Integration Tests on Staging Failed", to: "Gurparsaad2003@gmail.com"
                 }
             }
         }
