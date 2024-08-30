@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Use Maven to build the code
-                echo 'mvn clean package'
+                sh 'mvn clean package'
             }
         }
 
@@ -19,7 +19,7 @@ pipeline {
                 // Capture the logs
                 script {
                     try {
-                        echo 'mvn test'
+                        sh 'mvn test'
                         currentBuild.result = 'SUCCESS'
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
