@@ -10,7 +10,6 @@ pipeline{
         stage("Unit and Integration Test"){
             steps{
                 echo "Testing ..."
-                echo "mvn test"
                 echo "JUnit and TestNG Testing ..."
             }
             post{
@@ -31,7 +30,6 @@ pipeline{
         stage("Security Scan"){
             steps{
                 echo "Scanning ..."
-                echo "mvn org.owasp:dependency-check-maven:check"
                 echo "owasp dependency-check"
             }
             post{
@@ -51,7 +49,6 @@ pipeline{
         stage("Integration Tests on Staging"){
             steps{
                 echo "Testing on Staging ..."
-                echo "mvn verify"
                 echo "Selenium Testing ..."
             }
             post{
@@ -59,7 +56,6 @@ pipeline{
                     mail to: "Gurparsaad2003@gmail.com",
                     subject: "Integration Tests on Staging Status Email",
                     body: "Integratinon Tests on Staging log attached!"
-                    body: "Integration Tests on Staging log attached!"
                 }
             }
         }
