@@ -1,110 +1,71 @@
 pipeline {
     agent any
-
-    environment {
-        // Define a variable to store the email recipient
-        RECIPIENT = "Gurparsaad2003@gmail.com"
-    }
-
     stages {
-        stage('Build') {
+        stage("Build") {
             steps {
-                // Use Maven to build the code
-                sh 'mvn clean package'
+                echo "Building ..."
+                bat 'mvn clean package' 
             }
         }
-
-        stage('Unit and Integration Tests') {
+        stage("Unit and Integration Test") {
             steps {
-                // Capture the logs
-                script {
-                    try {
-                        sh 'mvn test'
-                        currentBuild.result = 'SUCCESS'
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        throw e
-                    }
-                }
+                echo "Running Unit and Integration Tests ..."
+                bat 'mvn test' 
             }
             post {
-                always {
-                    // Send an email with the test logs attached
-                    emailext attachLog: true,
-                             attachmentsPattern: 'test.log',
-                             body: "Unit and Integration Tests ${currentBuild.result}: Please find the attached logs.",
-                             subject: "Unit and Integration Tests ${currentBuild.result}",
-                             to: "${RECIPIENT}"
+                success {
+                    emailext attachLog: true, body: "Unit and Integration Test Success. Logs attached.", subject: "Unit and Integration Test Success", to: "Gurparsaad2003@gmail.com"
+                }
+                failure {
+                    emailext attachLog: true, body: "Unit and Integration Test failed. Logs attached.", subject: "Unit and Integration Test Failure", to: "Gurparsaad2003@gmail.com"
                 }
             }
         }
-
-        stage('Code Analysis') {
+        stage("Code Analysis") {
             steps {
-                // Integrate a code analysis tool like SonarQube
-                echo 'sonar-scanner'
+                echo "Running Code Analysis ..."
+                bat 'sonar-scanner' 
             }
         }
-
-        stage('Security Scan') {
+        stage("Security Scan") {
             steps {
-                // Capture the logs
-                script {
-                    try {
-                        echo 'OWASP Security Scan'
-                        currentBuild.result = 'SUCCESS'
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        throw e
-                    }
-                }
+                echo "Running Security Scan ..."
+                bat 'dependency-check.bat' 
             }
             post {
-                always {
-                    // Send an email with the security scan logs attached
-                    emailext attachLog: true,
-                             attachmentsPattern: 'security_scan.log',
-                             body: "Security Scan ${currentBuild.result}: Please find the attached logs.",
-                             subject: "Security Scan ${currentBuild.result}",
-                             to: "${RECIPIENT}"
+                success {
+                    emailext attachLog: true, body: "Security Scan passed. Logs attached.", subject: "Security Scan Success", to: "Gurparsaad2003@gmail.com"
+                }
+                failure {
+                    emailext attachLog: true, body: "Security Scan failed. Logs attached.", subject: "Security Scan Failure", to: "Gurparsaad2003@gmail.com"
                 }
             }
         }
-
-        stage('Deploy to Staging') {
+        stage("Deploy and Staging") {
             steps {
-                // Deploy the application to a staging server
-                echo 'aws deploy create-deployment'
+                echo "Deploying to Staging ..."
+                bat 'aws deploy create-deployment --application-name <app-name> --deployment-group-name <group-name> --s3-location <s3-bucket>'
             }
         }
-
-        stage('Integration Tests on Staging') {
+        stage("Integration Tests on Staging") {
             steps {
-                // Run integration tests on the staging environment
-                echo 'mvn integration-test'
+                echo "Running Integration Tests on Staging ..."
+                bat 'selenium-test-command' 
+            }
+            post {
+                success {
+                    emailext attachLog: true, body: "Integration Tests on Staging passed. Logs attached.", subject: "Integration Tests on Staging Success", to: "Gurparsaad2003@gmail.com"
+                }
+                failure {
+                    emailext attachLog: true, body: "Integration Tests on Staging failed. Logs attached.", subject: "Integration Tests on Staging Failure", to: "Gurparsaad2003@gmail.com"
+                }
             }
         }
-
-        stage('Deploy to Production') {
+        stage("Deploy to Production") {
             steps {
-                // Deploy the application to a production server
-                echo 'aws deploy create-deployment'
+                echo "Deploying to Production ..."
+                bat 'aws deploy create-deployment --application-name <app-name> --deployment-group-name <group-name> --s3-location <s3-bucket>'
             }
-        }
-    }
-
-    post {
-        success {
-            // Send notification email on overall pipeline success
-            emailext body: "Pipeline passed successfully.",
-                     subject: "Pipeline Passed",
-                     to: "${RECIPIENT}"
-        }
-        failure {
-            // Send notification email on overall pipeline failure
-            emailext body: "Pipeline failed.",
-                     subject: "Pipeline Failed",
-                     to: "${RECIPIENT}"
         }
     }
 }
