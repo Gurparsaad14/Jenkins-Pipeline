@@ -2,7 +2,7 @@ pipeline {
     agent any
     stages {
         stage("Build") {
-            steps {
+            steps{
                 echo "Building ..."
                 echo "mvn clean package"
             }
@@ -29,7 +29,6 @@ pipeline {
             steps {
                 echo "Analysing ..."
                 echo "mvn sonar:sonar"
-                echo "sonarqube code analysis"
             }
         }
         stage("Security Scan") {
